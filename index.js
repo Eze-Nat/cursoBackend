@@ -44,7 +44,7 @@ console.log(total);
 console.log(total/productos.length);
 console.log(mayor); */
 
-const aux = [];
+/* const aux = [];
 productos.forEach((e) => {
   aux.push(e.precio);
 });
@@ -61,3 +61,18 @@ console.log(
   menor,
   mayor
 );
+ */
+
+const moment = require('moment');
+const { monitorEventLoopDelay } = require("perf_hooks");
+
+moment().format();
+
+const hoy = moment().get('year');
+const naci = moment().set('year', 1986);
+
+console.log('Hoy es' + hoy)
+console.log('Naci el' + naci)
+
+const diff = moment().diff(hoy - naci);
+const format = moment().format()
