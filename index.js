@@ -1,78 +1,76 @@
+
 const fs = require("fs");
 
-/* 
-const date = Date.now();
-const hoy = new Date(date)
 
+class Contenedor {
 
-
-
-try {
-  fs.writeFileSync("./fyh.txt",`${hoy}`);
-
-  const fechaEjercicio = fs.readFileSync("./fyh.txt", "utf-8");
-} catch (e) {
-  console.log("invalid");
-}
- */
-
-const productos = [
-  { id: 1, nombre: `Escuadra`, precio: 323.45 },
-  { id: 2, nombre: `Calculadora`, precio: 234.56 },
-  { id: 3, nombre: `Globo Terráqueo`, precio: 45.67 },
-  { id: 4, nombre: `Paleta Pintura`, precio: 456.78 },
-  { id: 5, nombre: `Reloj`, precio: 67.89 },
-  { id: 6, nombre: `Agenda`, precio: 78.9 },
-];
-
-/* let nombre = "";
-let mayor = 0;
-
-
-productos.forEach((element) => {
-nombre = `${nombre}, ${elemente.nombre}`
-total += element.precio;
-
-  if (element.precio > mayor) {
-    mayor = element.precio;
+  constructor(datos) {
+    this.datos = datos;
   }
 
-});
 
-console.log(nombre);
-console.log(total);
-console.log(total/productos.length);
-console.log(mayor); */
+  async save(object) {
 
-/* const aux = [];
-productos.forEach((e) => {
-  aux.push(e.precio);
-});
+    const data = await fs.promises.readFile("productos.txt", 'utf-8')
+    const producto = JSON.parse(data);
+    const id = producto.length + 1
+    object.id = id;
+    
+    producto.push(object)
 
-const menor = Math.min(...aux);
-const mayor = Math.max(...aux);
+    const productoConvertido = JSON.stringify(producto)
+    await fs.promises.writeFile("productos.txt", productoConvertido);
 
-const totalProductos = productos.reduce((acc, e) => acc + e.precio, 0);
-const promedio = Math.round(totalProductos / productos.length);
+    return producto;
+  }
 
-console.log(
-  totalProductos,
-  `El promedio del valor es $${promedio}`,
-  menor,
-  mayor
-);
- */
+  async getById(id) {
+    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const producto = JSON.parse(data);
+    const productId = producto.find((product) => product.id == id)
+    if(productId) {
+      return productId
+    } else {
+      return "No se encontro"
+    }
+  }
 
-const moment = require('moment');
-const { monitorEventLoopDelay } = require("perf_hooks");
+  async getAll() {
+    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    return JSON.parse(data);
+  }
 
-moment().format();
+  async deleteById(id) {
+    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const producto = JSON.parse(data);
+    const productId = producto.find((product) => product.id == id)
+  
+    producto.slice(productId)
+    const productoBorrado = JSON.stringify(productId)
+    await fs.promises.writeFile("productos.txt", productoBorrado);
 
-const hoy = moment().get('year');
-const naci = moment().set('year', 1986);
+    return producto;
+  }
 
-console.log('Hoy es' + hoy)
-console.log('Naci el' + naci)
+  async deleteAll() {
+    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const prodDel = [];
+    await fs.promises.writeFile("productos.txt", prodDel);
+  }
 
-const diff = moment().diff(hoy - naci);
-const format = moment().format()
+}
+
+async function start() {
+const productos = new Contenedor("data");
+//const addProd = await productos.save({nombre: "papa", precio: 400})
+//const prod = await productos.getAll();
+//console.log(prod)
+//const productId = await productos.getById(1);
+//console.log(productId) 
+//const prodDeleteId = await productos.deleteById(2)
+//console.log(prodDeleteId)
+//const prodDeleteAll = await productos.deleteAll()
+//console.log(prodDeleteAll)
+}
+
+start()
