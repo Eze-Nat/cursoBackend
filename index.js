@@ -1,31 +1,33 @@
 
 const fs = require("fs");
 
+//const inicio = fs.writeFileSync(`data/productos.txt`, "[]")
 
 class Contenedor {
 
-  constructor(datos) {
-    this.datos = datos;
+  constructor(data) {
+    this.data = data;
   }
 
-
+  
+  
   async save(object) {
 
-    const data = await fs.promises.readFile("productos.txt", 'utf-8')
+    const data = await fs.promises.readFile(`${this.data}/productos.txt`, 'utf-8');
     const producto = JSON.parse(data);
-    const id = producto.length + 1
+    const id = producto.length + 1;
     object.id = id;
     
-    producto.push(object)
+    producto.push(object);
 
-    const productoConvertido = JSON.stringify(producto)
-    await fs.promises.writeFile("productos.txt", productoConvertido);
+    const productoConvertido = JSON.stringify(producto);
+    await fs.promises.writeFile(`${this.data}/productos.txt`, productoConvertido);
 
     return producto;
   }
 
   async getById(id) {
-    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const data = await fs.promises.readFile(`${this.data}/productos.txt`, 'utf-8');
     const producto = JSON.parse(data);
     const productId = producto.find((product) => product.id == id)
     if(productId) {
@@ -36,33 +38,33 @@ class Contenedor {
   }
 
   async getAll() {
-    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const data = await fs.promises.readFile(`${this.data}/productos.txt`, 'utf-8');
     return JSON.parse(data);
   }
 
   async deleteById(id) {
-    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const data = await fs.promises.readFile(`${this.data}/productos.txt`, 'utf-8');
     const producto = JSON.parse(data);
     const productId = producto.find((product) => product.id == id)
   
     producto.slice(productId)
     const productoBorrado = JSON.stringify(productId)
-    await fs.promises.writeFile("productos.txt", productoBorrado);
+    await fs.promises.writeFile(`${this.data}/productos.txt`, productoBorrado);
 
     return producto;
   }
 
   async deleteAll() {
-    const data = await fs.promises.readFile("productos.txt", 'utf-8');
+    const data = await fs.promises.readFile(`${this.datos}/productos.txt`, 'utf-8');
     const prodDel = [];
-    await fs.promises.writeFile("productos.txt", prodDel);
+    await fs.promises.writeFile(`${this.data}/productos.txt`, prodDel);
   }
 
 }
 
 async function start() {
 const productos = new Contenedor("data");
-//const addProd = await productos.save({nombre: "papa", precio: 400})
+const addProd = await productos.save({nombre: "papa", precio: 400})
 //const prod = await productos.getAll();
 //console.log(prod)
 //const productId = await productos.getById(1);
