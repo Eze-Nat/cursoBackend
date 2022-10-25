@@ -47,11 +47,13 @@ class Contenedor {
     const producto = JSON.parse(data);
     const productId = producto.find((product) => product.id == id)
   
-    producto.slice(productId)
-    const productoBorrado = JSON.stringify(productId)
-    await fs.promises.writeFile(`${this.data}/productos.txt`, productoBorrado);
-
-    return producto;
+    if(productId) {
+      producto.splice(producto.indexOf(productId), 1)
+      console.log(producto)
+      await fs.promises.writeFile(`${this.data}/productos.txt`, JSON.stringify(producto, null, 2))
+    } else {
+      return console.log("No se encontro")
+    }
   }
 
   async deleteAll() {
