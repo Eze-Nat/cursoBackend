@@ -1,37 +1,38 @@
-const express = require('express')
-const fs = require("fs");
-const Contenedor = require("./classContainer")
-const app = express()
-const port = process.env.PORT || 8080;
+const express = require('express');
+const Contenedor = require("./contenedor");
+const app = express();
+const PORT = process.env.PORT || 8080;
 
+const productoContainer = new Contenedor("productos")
 
-app.get('/getall', async (req, res) => {
-  const contenedor = new Contenedor();
-  
-  const todos = await contenedor.getAll();
-  
-  res.json(todos);
-  
+const randomFunction = (limite) => {
+    return parseInt(Math.random() * limite)
+}
+
+app.get('/', (req, res) => {
+    res.send("<h1 style='color:black'>Bienvenidos al servidor express</h1> <a href='/productos'>productos</a> <a href='/productoRandom'>producto ramdom</a>")
 })
 
-app.get('/algo', async (req, res) => {
-  const todos = await contenedor.getAll();
-  res.json({id: 100, name: "algo", age: 20})
+
+app.get("/productos", (req, res) => {
+    productoContainer.getAll()
+        .then(listaParse => {
+            res.json(listaParse)
+        })
+
 })
 
-app.get('/random', async (req, res) => {
-  const algunoRandom = await /* mathrandom */
-  res.json(/* Codear para que tire algun producto math random? */)
-})
 
-app.get('/alumnos', (req, res) => {
-  res.json([
-    {id: 100, name: "algo", age: 20},
-    {id: 101, name: "algo2", age: 30},
-    {id: 102, name: "algo3", age: 40}])
-})
+app.get("/productoRandom", (req, res) => {
+    productoContainer.getAll()
+        .then(listaParse =>
+            listaParse[randomFunction(listaParse.length)]
+        )
+        .then(itemLista =>
+            res.json(itemLista))
+});
 
-app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
-})
 
+app.listen(PORT, () => {
+    console.log(`Example app listening on port http://localhost:${PORT}`);
+})
